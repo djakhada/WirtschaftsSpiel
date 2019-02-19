@@ -39,10 +39,10 @@ public class GameInterface extends JFrame{
 	public int holzpfeiler=200000, stahlpfeiler=1000000, wasserpumpen=500000, rauchverbot=600, staubschutz=10000, krankenversicherung=40000, unfallversicherung=40000, streik_umsatzausfall=40000;
 	public int werbung1= 10000, werbung2= 50000, werbung3= 125000, erstehilfe= 10000, kredit=0, laufzeit=0, LagerV=0;
 	public int Forschungsabbau=0, Forschungslager=0;
-	
+
 	//neue Variablen!!
 	private int geldKapital=0;
-	
+
 	private JTextField txtAbbaumenge;
 	private JTextField txtLagern;
 	private JTextField txtVerkaufen;
@@ -136,7 +136,8 @@ public class GameInterface extends JFrame{
 	private JSlider sliderKredit;
 	private final JLabel lblForschungBild = new JLabel("");
 	private final JTextArea textArea_1 = new JTextArea();
-	
+	private final JLabel lblAbbaukosten = new JLabel("Momentane Abbaukosten: 314€/t");
+
 	public void Updaten(){
 		System.out.println("Client: GameInterface Updaten");
 		geldKapital = VF.getGeldKapital();
@@ -145,7 +146,7 @@ public class GameInterface extends JFrame{
 		maxLager = VF.getLagerMax()+Forschungslager;
 		Lager = VF.getLager();
 		maxKredit = VF.getMaxKredit();
-	
+
 		//Gucken ob Kredit verfügbar ist
 		if(VF.getKreditLaufzeit()>0) {
 				btnKredit.setEnabled(false);
@@ -155,27 +156,28 @@ public class GameInterface extends JFrame{
 				chckbxlaufzeit1.setEnabled(true);
 				chckbxlaufzeit2.setEnabled(true);
 			}
-		
+
 		lblGeldKapital.setText("Geldkapital: "+geldKapital+"€");
 		lblKapitalForschung.setText(geldKapital+"€");
 		lblKapitalBank.setText(geldKapital+"€");
-		
+		lblAbbaukosten.setText("Momentane Abbaukosten: "+VF.getAbbauKosten()+"€/t");
+
 		lblMaxKredit.setText("Maximaler Kredit: "+VF.getMaxKredit()+'€');
-		
+
 		lblLager.setText("Lagerbestand: "+VF.getLager()+"t (Wert: "+(VF.getLager()*VF.getMarktPreis())+"€)");
 		lblMaxLager.setText("Maximaler Lagerplatz: "+maxLager+"t");
 		lblFreeLager.setText("Noch verfügbarer Lagerplatz: "+freeLager+"t");
 		label_10.setText("    "+Runde+"");
-		
+
 		lblMarktpreis.setText("Aktueller Marktpreis pro Tonne Erz: "+VF.getMarktPreis()+"€");
 		lblAbbaumengemax.setText("Abbaumenge (Max. "+maxAbbau+"t)");
 		txtAbbaumenge.setText(""+maxAbbau);
-		
+
 		textStatis.setText("Rückzahlung: "+VF.getKredit()+"€"+
 							"\nKreditlaufzeit: "+VF.getKreditLaufzeit()+
 							" Runden\nZinsen: "+VF.getZinssatz()+"%"+
 							"\nGewinn: "+VF.getGeldaenderung()+"€");
-		
+
 		textA_Runde.setText("Runde:"+Runde+"\n"+"geldKapital:"+VF.getGeldKapital()+"€\n"+"Gewinn:"+VF.getGeldaenderung()+"€\n"+"Marktpreis:"+VF.getMarktPreis()+"€\n"+"Abbaumenge:"+(VF.getVerkaufsmenge()+VF.getLagermenge())+"t\n"+"Verkaufsmenge:"+VF.getLagermenge()+"t\n"+"Lagerstand:"+VF.getLager()+"t\n");
 		sliderAbbau.setValue(0);
 		sliderAbbau.setValue(100); //Nötig um den sliderAbbau.change Handler aufzurufen
@@ -183,8 +185,8 @@ public class GameInterface extends JFrame{
 		sliderKredit.setValue(49);
 		sliderKredit.setValue(50);
 	}
-	
-	/**	
+
+	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
@@ -208,10 +210,10 @@ public class GameInterface extends JFrame{
 	/**
 	 * Create the frame.
 	 */
-	
+
 	public GameInterface(VerbindungsFenster VF) {
 		setResizable(false);
-		
+
 		//panel_2.setBackground("X:\\Start.png");
 		//JLabel panel_2 = new JLabel(new ImageIcon("/res/mariocraft_main.png"));
 
@@ -224,15 +226,15 @@ public class GameInterface extends JFrame{
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(0, 0, 1280, 800);
 		contentPane.add(tabbedPane);
-		
+
 		sliderLagerVerkauf.setBounds(494, 524, 102, 30);
 		panel.add(sliderLagerVerkauf);
 		sliderLagerVerkauf.setValue(0);
-		
+
 		sliderKredit = new JSlider();
 		sliderKredit.setMinimum(10);
 		txtKredit = new JTextField(maxKredit/2+"");
@@ -244,7 +246,7 @@ public class GameInterface extends JFrame{
 		txtLagern = new JTextField();
 		txtLagern.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtLagern.setEditable(false);
-		
+
 		panel.setLayout(null);
 		panel.setToolTipText("F\u00FChrt order aus");
 		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -255,112 +257,113 @@ public class GameInterface extends JFrame{
 		txtVerkaufSumme.setEditable(false);
 		txtVerkaufSumme.setColumns(10);
 		txtVerkaufSumme.setBounds(616, 452, 112, 26);
-		panel.add(txtVerkaufSumme);	
+		panel.add(txtVerkaufSumme);
 		txtAbbaumenge = new JTextField();
 		txtAbbaumenge.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtAbbaumenge.setEditable(false);
 		txtAbbaumenge.setText(maxAbbau+"");
 		txtAbbaumenge.setColumns(10);
 		txtAbbaumenge.setBounds(69, 452, 102, 30);
-		panel.add(txtAbbaumenge);		
+		panel.add(txtAbbaumenge);
 		lblAbbaumengemax.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		
+
 		lblAbbaumengemax.setBounds(69, 418, 268, 25);
 		panel.add(lblAbbaumengemax);
 		lblLagern.setFont(new Font("Tahoma", Font.PLAIN, 15));
-	
+
 		lblLagern.setBounds(69, 493, 72, 20);
 		panel.add(lblLagern);
-		
+
 		txtLagern.setColumns(10);
 		txtLagern.setBounds(69, 524, 102, 30);
 		panel.add(txtLagern);
 		lblLager.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		
-		lblLager.setBounds(903, 147, 340, 25);
+
+		lblLager.setBounds(855, 138, 391, 25);
 		panel.add(lblLager);
 		lblVerkauf.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		
+
 		lblVerkauf.setBounds(385, 418, 102, 25);
 		panel.add(lblVerkauf);
-		
+
 		txtVerkaufen.setColumns(10);
 		txtVerkaufen.setBounds(385, 452, 102, 26);
 		panel.add(txtVerkaufen);
 		lblMarktpreis.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		
+
 		lblMarktpreis.setBounds(69, 630, 294, 34);
 		panel.add(lblMarktpreis);
-		
+
 		scrollPane.setBounds(855, 394, 340, 293);
 		panel.add(scrollPane);
 		textA_Runde.setEditable(false);
-		
+
 		scrollPane.setViewportView(textA_Runde);
 		label_9.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		
+
 		label_9.setBounds(855, 358, 221, 25);
 		panel.add(label_9);
 		label_10.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		
+
 		label_10.setBounds(1130, 7, 65, 34);
 		panel.add(label_10);
 		lblGeldKapital.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblGeldKapital.setBackground(Color.WHITE);
-		
-		lblGeldKapital.setBounds(903, 121, 340, 25);
+
+		lblGeldKapital.setBounds(855, 102, 391, 25);
 		panel.add(lblGeldKapital);
-		
+
 		tabbedPane.addTab("Bank", null, panel_2, null);
 		panel_2.setLayout(null);
 		panel_2.setBorder(new EmptyBorder(5, 5, 5, 5));
-		
+
 		lblKapitalBank.setBounds(790, 310, 136, 14);
 		panel_2.add(lblKapitalBank);
-		
+
 		txtKredit.setColumns(10);
 		txtKredit.setBounds(198, 350, 161, 32);
 		panel_2.add(txtKredit);
 		lblKreditsumme.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		
+
 		lblKreditsumme.setBounds(198, 285, 161, 32);
 		panel_2.add(lblKreditsumme);
-		
+
 		lblMaxKredit.setBounds(198, 411, 294, 14);
 		panel_2.add(lblMaxKredit);
 		textStatis.setFont(new Font("Monospaced", Font.PLAIN, 20));
 		textStatis.setEditable(false);
-		
+
 		textStatis.setText("Kredit:0.0\nZinsen:0.0\nGewinn:0.0\n");
 		textStatis.setBounds(790, 368, 294, 270);
 		panel_2.add(textStatis);
 		chckbxlaufzeit1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		
+
 		chckbxlaufzeit1.setBounds(462, 396, 244, 36);
 		panel_2.add(chckbxlaufzeit1);
 		chckbxlaufzeit2.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		
+
 		chckbxlaufzeit2.setBounds(462, 446, 244, 36);
 		panel_2.add(chckbxlaufzeit2);
 		btnRunde.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnRunde.setEnabled(true);
 		btnRunde.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {						
+			public void actionPerformed(ActionEvent e) {
 				int LagerMenge = Integer.parseInt(txtLagern.getText())-Integer.parseInt(txtLagerVerkauf.getText());
 				int VerkaufMenge = Integer.parseInt(txtVerkaufen.getText())+Integer.parseInt(txtLagerVerkauf.getText());
-				
+
 			    int dialogResult = JOptionPane.showConfirmDialog(null, "Willst du die Runde wirklich beenden?\nWerte:\nLagermenge: "+LagerMenge+"t\n"+"Verkaufsmenge: "+VerkaufMenge+"t\n", "Runde beenden?",JOptionPane.YES_NO_OPTION);
 			    if (dialogResult==JOptionPane.YES_OPTION){
 			    	btnRunde.setEnabled(false);
+			    	VF.setAbbaumenge(Integer.parseInt(txtLagern.getText())+Integer.parseInt(txtVerkaufen.getText()));
 			    	VF.setLagermenge(LagerMenge);
 			    	VF.setVerkaufsmenge(VerkaufMenge);
 			    	VF.confirmRound();
-			    }				    	
+			    }
 			}
 		});
 		btnRunde.setBounds(855, 276, 340, 34);
 		panel.add(btnRunde);
-		
+
 		sliderLagern.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				int Abbaumenge = Integer.parseInt(txtAbbaumenge.getText());
@@ -375,12 +378,12 @@ public class GameInterface extends JFrame{
 					txtLagern.setText(neuValue+"");
 					sliderVerkaufen.setValue(100-sliderLagern.getValue());
 					txtVerkaufen.setText(Differenz+"");
-				}			
+				}
 				int VerkaufSumme = Integer.parseInt(txtVerkaufen.getText())+Integer.parseInt(txtLagerVerkauf.getText());
 				txtVerkaufSumme.setText(VerkaufSumme+"");
 			}
 		});
-		
+
 		sliderVerkaufen.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				int neuValue = Integer.parseInt(txtAbbaumenge.getText()) * sliderVerkaufen.getValue()/100;
@@ -388,7 +391,7 @@ public class GameInterface extends JFrame{
 				sliderLagern.setValue(100-sliderVerkaufen.getValue());
 			}
 		});
-		
+
 		sliderLagerVerkauf.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				int neuValue = Lager * sliderLagerVerkauf.getValue()/100;
@@ -397,7 +400,7 @@ public class GameInterface extends JFrame{
 				txtVerkaufSumme.setText(VerkaufSumme+"");
 			}
 		});
-		
+
 		sliderKredit.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				int minKredit = (int)(maxKredit*0.2);
@@ -405,7 +408,7 @@ public class GameInterface extends JFrame{
 				txtKredit.setText(neuValue+"");
 			}
 		});
-		
+
 		sliderAbbau.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				int neuValue = maxAbbau * sliderAbbau.getValue()/100;
@@ -423,46 +426,46 @@ public class GameInterface extends JFrame{
 					txtVerkaufen.setText(Differenz+"");
 				}
 			}
-		});		
-		
+		});
+
 		sliderLagern.setBounds(201, 524, 102, 30);
 		panel.add(sliderLagern);
-		
+
 		sliderVerkaufen.setBounds(494, 450, 102, 25);
 		panel.add(sliderVerkaufen);
-		
+
 		sliderAbbau.setValue(100);
 		sliderAbbau.setBounds(181, 451, 156, 31);
 		panel.add(sliderAbbau);
 		lblMaxLager.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		
-		lblMaxLager.setBounds(903, 177, 340, 25);
+
+		lblMaxLager.setBounds(855, 174, 391, 25);
 		panel.add(lblMaxLager);
 		lblFreeLager.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		
-		lblFreeLager.setBounds(903, 202, 340, 33);
+
+		lblFreeLager.setBounds(855, 199, 391, 33);
 		panel.add(lblFreeLager);
-		
+
 		lblLagerverkauf = new JLabel("Lagerverkauf");
 		lblLagerverkauf.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblLagerverkauf.setBounds(385, 495, 182, 17);
 		panel.add(lblLagerverkauf);
-		
+
 		txtLagerVerkauf = new JTextField();
 		txtLagerVerkauf.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtLagerVerkauf.setEditable(false);
 		txtLagerVerkauf.setColumns(10);
 		txtLagerVerkauf.setBounds(385, 524, 102, 30);
 		panel.add(txtLagerVerkauf);
-		
-		
-		
+
+
+
 		lblVerkaufSumme = new JLabel("Verkauf Summe");
 		lblVerkaufSumme.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblVerkaufSumme.setBounds(617, 421, 193, 20);
 		panel.add(lblVerkaufSumme);
 		btnKredit.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		
+
 		JTextArea textArea = new JTextArea();
 		textArea.setEnabled(false);
 		textArea.setEditable(false);
@@ -471,14 +474,13 @@ public class GameInterface extends JFrame{
 		textArea_1.setEnabled(false);
 		textArea_1.setEditable(false);
 		textArea_1.setBounds(51, 630, 340, 34);
-		
+
 		panel.add(textArea_1);
-		
-		JLabel lblSpielBild = new JLabel(iconspiel);
-		lblSpielBild.setBounds(0, -51, 1280, 800);
-		panel.add(lblSpielBild);
-		lblSpielBild.setBounds(0, -51, 1280, 800);
-		
+		lblAbbaukosten.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblAbbaukosten.setBounds(855, 233, 391, 33);
+
+		panel.add(lblAbbaukosten);
+
 		btnKredit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				kredit =Integer.parseInt(txtKredit.getText());
@@ -490,15 +492,15 @@ public class GameInterface extends JFrame{
 					VF.setGenommenerKredit(kredit);
 					VF.setKreditLaufzeit(laufzeit);
 				}
-				
+
 				else if (chckbxlaufzeit2.isSelected()&&!chckbxlaufzeit1.isSelected())	{
-					laufzeit=6;	
+					laufzeit=6;
 					chckbxlaufzeit2.setEnabled(false);
 					chckbxlaufzeit1.setEnabled(false);
 					btnKredit.setEnabled(false);
 					VF.setGenommenerKredit(kredit);
 					VF.setKreditLaufzeit(laufzeit);
-					
+
 				}
 				else		{
 					JOptionPane.showMessageDialog(null,"Fehler bei laufzeitwahl", "fatal error", JOptionPane.ERROR_MESSAGE);
@@ -507,196 +509,196 @@ public class GameInterface extends JFrame{
 		});
 		btnKredit.setBounds(198, 465, 161, 33);
 		panel_2.add(btnKredit);
-		
+
 		JLabel lblInfoBank = new JLabel("");
 		lblInfoBank.setBounds(478, 277, 228, 40);
 		panel_2.add(lblInfoBank);
-		
+
 		sliderKredit.setBounds(462, 321, 244, 40);
 		panel_2.add(sliderKredit);
-		
+
 		JLabel lblBankBild = new JLabel(iconbank);
 		lblBankBild.setBounds(10, -16, 1280, 800);
 		panel_2.add(lblBankBild);
 		lblBankBild.setBounds(0, -51, 1280, 800);
-		
+
 		JCheckBox chckbxLaufzeitRunden = new JCheckBox("Laufzeit 16 Runden");
 		chckbxLaufzeitRunden.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		chckbxLaufzeitRunden.setBounds(462, 496, 244, 36);
 		panel_2.add(chckbxLaufzeitRunden);
-		
+
 		JCheckBox checkBox_1 = new JCheckBox("Laufzeit 6 Runden");
 		checkBox_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		checkBox_1.setBounds(462, 546, 244, 36);
 		panel_2.add(checkBox_1);
-		
+
 		panel_1.setLayout(null);
 		panel_1.setBorder(new EmptyBorder(5, 5, 5, 5));
 		tabbedPane.addTab("Forschung ", null, panel_1, null);
-		
+
 		chckbxlager1.setBounds(161, 172, 144, 23);
 		panel_1.add(chckbxlager1);
-		
+
 		chckbxlager2.setEnabled(false);
 		chckbxlager2.setBounds(161, 198, 144, 23);
 		panel_1.add(chckbxlager2);
-		
+
 		chckbxlager3.setEnabled(false);
 		chckbxlager3.setBounds(161, 224, 144, 23);
 		panel_1.add(chckbxlager3);
-		
+
 		chckbxarbeiter1.setBounds(161, 250, 144, 23);
 		panel_1.add(chckbxarbeiter1);
-		
+
 		chckbxarbeiter2.setEnabled(false);
 		chckbxarbeiter2.setBounds(161, 276, 144, 23);
 		panel_1.add(chckbxarbeiter2);
-		
+
 		chckbxarbeiter3.setEnabled(false);
 		chckbxarbeiter3.setBounds(161, 302, 144, 23);
 		panel_1.add(chckbxarbeiter3);
-		
+
 		chckbxpressluft.setBounds(161, 328, 144, 23);
 		panel_1.add(chckbxpressluft);
-		
+
 		chckbxbagger.setBounds(161, 354, 144, 23);
 		panel_1.add(chckbxbagger);
-		
+
 		chckbxkanarien.setBounds(161, 406, 144, 23);
 		panel_1.add(chckbxkanarien);
-		
+
 		chckbxholzpfeiler.setBounds(161, 432, 144, 23);
 		panel_1.add(chckbxholzpfeiler);
-		
+
 		chckbxstahlpfeiler.setEnabled(false);
 		chckbxstahlpfeiler.setBounds(161, 458, 144, 23);
 		panel_1.add(chckbxstahlpfeiler);
-		
+
 		chckbxwasserpumpe.setBounds(161, 484, 144, 23);
 		panel_1.add(chckbxwasserpumpe);
-		
+
 		chckbxrauchverbot.setBounds(161, 510, 144, 23);
 		panel_1.add(chckbxrauchverbot);
-		
+
 		chckbxstaubschutz.setBounds(161, 536, 144, 23);
 		panel_1.add(chckbxstaubschutz);
-		
+
 		chckbxerstehilfe.setBounds(161, 562, 144, 23);
 		panel_1.add(chckbxerstehilfe);
-		
+
 		chckbxkrankenversicherung.setBounds(476, 172, 144, 23);
 		panel_1.add(chckbxkrankenversicherung);
-		
+
 		chckbxunfallversicherung.setBounds(476, 200, 144, 23);
 		panel_1.add(chckbxunfallversicherung);
-		
+
 		chckbxstreikumsatzausfall.setBounds(476, 226, 144, 23);
 		panel_1.add(chckbxstreikumsatzausfall);
-		
+
 		chckbxwerbung1.setBounds(476, 252, 144, 23);
 		panel_1.add(chckbxwerbung1);
-		
+
 		chckbxwerbung2.setBounds(476, 278, 144, 23);
 		panel_1.add(chckbxwerbung2);
-		
+
 		chckbxwerbung3.setBounds(476, 304, 144, 23);
 		panel_1.add(chckbxwerbung3);
-		
+
 		lblLager1.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblLager1.setBounds(311, 176, 89, 19);
 		panel_1.add(lblLager1);
-		
+
 		lblLager2.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblLager2.setBounds(311, 202, 89, 14);
 		panel_1.add(lblLager2);
-		
+
 		lblLager3.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblLager3.setBounds(311, 228, 89, 14);
 		panel_1.add(lblLager3);
-		
+
 		lblArbeiter1.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblArbeiter1.setBounds(311, 254, 89, 14);
 		panel_1.add(lblArbeiter1);
-		
+
 		lblArbeiter2.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblArbeiter2.setBounds(311, 280, 89, 14);
 		panel_1.add(lblArbeiter2);
-		
+
 		lblArbeiter3.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblArbeiter3.setBounds(311, 306, 89, 14);
 		panel_1.add(lblArbeiter3);
-		
+
 		lblPressluft.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblPressluft.setBounds(311, 332, 89, 14);
 		panel_1.add(lblPressluft);
-		
+
 		lblBagger.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblBagger.setBounds(311, 358, 89, 14);
 		panel_1.add(lblBagger);
-		
+
 		lblKanarien.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblKanarien.setBounds(311, 410, 89, 14);
 		panel_1.add(lblKanarien);
-		
+
 		lblHolzpfeiler.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblHolzpfeiler.setBounds(311, 436, 89, 14);
 		panel_1.add(lblHolzpfeiler);
-		
+
 		lblStahlpfeiler.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblStahlpfeiler.setBounds(311, 462, 89, 14);
 		panel_1.add(lblStahlpfeiler);
-		
+
 		lblWasserpumpe.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblWasserpumpe.setBounds(311, 488, 89, 14);
 		panel_1.add(lblWasserpumpe);
-		
+
 		lblRauchverbot.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblRauchverbot.setBounds(311, 514, 89, 14);
 		panel_1.add(lblRauchverbot);
-		
+
 		lblStaubschutz.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblStaubschutz.setBounds(311, 540, 89, 14);
 		panel_1.add(lblStaubschutz);
-		
+
 		lblErstehilfekasten.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblErstehilfekasten.setBounds(311, 566, 89, 14);
 		panel_1.add(lblErstehilfekasten);
-		
+
 		lblKrankenversicherung.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblKrankenversicherung.setBounds(626, 176, 89, 14);
 		panel_1.add(lblKrankenversicherung);
-		
+
 		lblUnfallversicherung.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblUnfallversicherung.setBounds(626, 204, 89, 14);
 		panel_1.add(lblUnfallversicherung);
-		
+
 		lblStreikumsatzversicherung.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblStreikumsatzversicherung.setBounds(626, 230, 89, 14);
 		panel_1.add(lblStreikumsatzversicherung);
-		
+
 		lblWerbung1.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblWerbung1.setBounds(626, 256, 89, 14);
 		panel_1.add(lblWerbung1);
-		
+
 		lblWerbung2.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblWerbung2.setBounds(626, 282, 89, 14);
 		panel_1.add(lblWerbung2);
-		
+
 		lblWerbung3.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblWerbung3.setBounds(626, 308, 89, 14);
 		panel_1.add(lblWerbung3);
 		lblKapitalForschung.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		
+
 		lblKapitalForschung.setBounds(512, 393, 158, 40);
 		panel_1.add(lblKapitalForschung);
-		
+
 		chckbxSbagger.setBounds(161, 380, 144, 23);
 		panel_1.add(chckbxSbagger);
-		
+
 		lblSbagger.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblSbagger.setBounds(311, 385, 89, 14);
 		panel_1.add(lblSbagger);
-		
+
 		chckbxlager2.setEnabled(false);
 		chckbxlager3.setEnabled(false);
 		chckbxarbeiter2.setEnabled(false);
@@ -850,12 +852,12 @@ public class GameInterface extends JFrame{
 					chckbxwerbung3.setEnabled(true);
 					 geldKapital=  geldKapital-werbung3;
 				}
-				lblKapitalForschung.setText(geldKapital+"€");		
+				lblKapitalForschung.setText(geldKapital+"€");
 			}
 		});
 		btnForschung.setBounds(476, 437, 239, 109);
 		panel_1.add(btnForschung);
-	
+
 		JLabel lblForschungBild = new JLabel(iconforschung);
 		lblForschungBild.setBounds(0, 0, 1280, 800);
 		panel_1.add(lblForschungBild);

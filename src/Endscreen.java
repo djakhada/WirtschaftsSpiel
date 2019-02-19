@@ -65,7 +65,7 @@ public class Endscreen extends JFrame {
 	public void setWinner(boolean winner){
 		this.isWinner=winner;
 		if(isWinner)lblGewonnen.setText("Du hast gewonnen!");
-		else lblGewonnen.setText("Du leider verloren gewonnen...");
+		else lblGewonnen.setText("Du hast leider verloren...");
 	}
 
 	public void setRundenDaten(ArrayList<RundenDaten> rd){

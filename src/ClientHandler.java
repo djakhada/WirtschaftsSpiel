@@ -12,9 +12,9 @@ public class ClientHandler extends Thread
 	final DataInputStream dis;
 	final DataOutputStream dos;
 	final Socket s;
-	
+
 	private final ServerFenster sw;
-	
+
 	final int startKapital;
 	final int maximalerKredit;
 	final boolean startkapitalKredit;
@@ -26,7 +26,7 @@ public class ClientHandler extends Thread
 	String name;
 	List<Spieler> spieler = new ArrayList<>();
 	Spieler aktuellerSpieler;
-	
+
 	public ClientHandler(ServerFenster sw, Socket s, DataInputStream dis, DataOutputStream dos) {
 		this.sw = sw;
 		this.s = s;
@@ -39,10 +39,10 @@ public class ClientHandler extends Thread
 		this.maximaleSpielerAnzahl = sw.maximaleSpielerAnzahl;
 		this.startKreditZinssatz = sw.startKreditZinssatz;
 	}
-	
+
 	public void spielerUpdaten(Spieler spieler){
 		runde = sw.Runde;
-		String msg;	
+		String msg;
 		msg = "ID:"+sw.spieler.indexOf(spieler);
 		sendToOut(spieler.Socket, msg);
 		msg = "Kapital:"+spieler.Geldkapital;
@@ -65,19 +65,21 @@ public class ClientHandler extends Thread
 		sendToOut(spieler.Socket, msg);
 		msg = "9Runde:"+runde;
 		sendToOut(spieler.Socket, msg);
+		msg = "Abbaukosten:"+sw.markt.Abbaukosten;
+		sendToOut(spieler.Socket, msg);
 	}
-	
+
 	public void sendToOut(Socket s, String msg) {
 		try {
 			DataOutputStream d = new DataOutputStream(s.getOutputStream());
 			d.writeUTF(msg);
 			System.out.println("Server[ich]->Client["+s.getRemoteSocketAddress().toString()+"]: "+"\""+msg+"\"");
-			
+
 		} catch (IOException e) {
 			System.out.println("Fehler bei sendToOut. Nachricht an Client["+s.getRemoteSocketAddress().toString()+"]: "+"\""+msg+"\"");
 		}
 	}
-	
+
 	public void addSpieler(List<Spieler> spielerListe, String Name,  int startKapital, boolean startkapitalKredit) {
 			Spieler s;
 			if(startkapitalKredit) {
@@ -96,8 +98,8 @@ public class ClientHandler extends Thread
 			sw.updateTable();
 			aktuellerSpieler = s;
 	}
-	
-	
+
+
 	private void CloseThread() {
 		try {
 			s.close();
@@ -109,18 +111,18 @@ public class ClientHandler extends Thread
 		}
 		this.interrupt();
 	}
-	
-	//public void 
-	
+
+	//public void
+
 	@Override
-	public void run() 
+	public void run()
 	{
 		String IP = s.getRemoteSocketAddress().toString();
 		System.out.println("Server: Höre Client: "+IP+" jetzt zu.");
 		String received;
-		while (true) 
+		while (true)
 		{
-			try {				
+			try {
 				received = dis.readUTF();
 				if(received.equals("updateme")) {
 					spielerUpdaten(aktuellerSpieler);
@@ -140,21 +142,27 @@ public class ClientHandler extends Thread
 					}else {
 						System.out.println("Spieler "+name+" wurde der Spielerliste nicht hinzugefügt, da das Spiel voll ist.");
 						dos.writeUTF("fullgame");
-					}	
+					}
 				}
-				else if(received.contains("Lagermenge:")) 
+				else if(received.contains("Lagermenge:"))
 				{
 					int Lagermenge = Integer.parseInt(received.substring(received.lastIndexOf(":")+1));
 					System.out.println("Server<-Client: Lagermenge: "+Lagermenge);
 					aktuellerSpieler.Lagermenge = Lagermenge;
 				}
-				else if(received.contains("Verkaufsmenge:")) 
+				else if(received.contains("Abbaumenge:"))
+				{
+					int Abbaumenge = Integer.parseInt(received.substring(received.lastIndexOf(":")+1));
+					System.out.println("Server<-Client: Lagermenge: "+Abbaumenge);
+					aktuellerSpieler.Abbaumenge = Abbaumenge;
+				}
+				else if(received.contains("Verkaufsmenge:"))
 				{
 					int Verkaufsmenge = Integer.parseInt(received.substring(received.lastIndexOf(":")+1));
 					System.out.println("Server<-Client: Verkaufsmenge: "+Verkaufsmenge);
-					aktuellerSpieler.Verkaufsmenge = Verkaufsmenge;	
+					aktuellerSpieler.Verkaufsmenge = Verkaufsmenge;
 				}
-				else if(received.contains("Kreditmenge:")) 
+				else if(received.contains("Kreditmenge:"))
 				{
 					int Kreditmenge = Integer.parseInt(received.substring(received.lastIndexOf(":")+1));
 					System.out.println("Server<-Client: Genommene Kreditmenge: "+Kreditmenge);
@@ -177,7 +185,7 @@ public class ClientHandler extends Thread
 				break;
 			}
 		}
-		
+
 		try {
 			this.dos.close();
 			this.dis.close();

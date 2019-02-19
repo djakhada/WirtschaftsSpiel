@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Markt {
 
@@ -10,7 +11,8 @@ public class Markt {
 			Runde = 1,
 			maxAbbauStart = 5000,
 			marktBedarf = 0,
-			verkaufLetzteRunde = 0;
+			verkaufLetzteRunde = 0,
+			Abbaukosten=15;
 	boolean GameStart = true;
 
 	public List<Spieler> spieler = new ArrayList<>();
@@ -25,6 +27,7 @@ public class Markt {
 
 
 	public void NaechsteRunde() {
+		AbbauKostenBerechnen();
 		MaximaleAbbaumengeBerechnen();
 		MarktBerechnen();
 		KapitaleBerechnen();
@@ -38,6 +41,10 @@ public class Markt {
 		return Kapital;
 	}
 
+	public void AbbauKostenBerechnen(){
+		Abbaukosten = 10 + new Random().nextInt(5);
+	}
+
 	public void KapitaleBerechnen(){
 		//Neuen Marktpreis berechnen
 		if(!GameStart) {
@@ -47,6 +54,9 @@ public class Markt {
 				s.Lager = s.Lager + s.Lagermenge;
 				s.Lagermenge = 0;
 
+
+				int abbauKosten = s.Abbaumenge * this.Abbaukosten;
+				s.Abbaumenge = 0;
 
 				int Kreditrate = 0;
 				int Kapitaleinfluss;
@@ -58,13 +68,17 @@ public class Markt {
 					}else s.isKreditNeu=false;
 				}
 				Kapitaleinfluss = s.Verkaufsmenge * preis;
-				Kapitaleinfluss = Kapitaleinfluss - Kreditrate;
+				Kapitaleinfluss = Kapitaleinfluss - Kreditrate - abbauKosten - 25000;
 				s.Verkaufsmenge = 0;
 
 
 				//1. Rüchzahlungswert = KREDIT + Kredit*Kredit.Zinssatz
 				//2. Rüchkzahlng / Laufzeit = Rate
 				//3. Kredit = Kredit-Rate
+
+
+				//+Fixkosten
+
 
 
 				//ohne berücksichtigung von Forschung
@@ -84,8 +98,6 @@ public class Markt {
 			s.maxAbbaumenge = 5000;
 		}
 	}
-
-
 
 
 	public void MarktBerechnen(){

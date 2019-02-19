@@ -128,6 +128,8 @@ class ResponseHandler extends Thread {
 					cw.ResponseBearbeiten(16);
 				}else if(received.equals("!loser")) {
 					cw.ResponseBearbeiten(17);
+				}else if(received.contains("Abbaukosten:")) {
+					cw.ResponseBearbeiten(18, received);
 				}
 			}catch(IOException e) {
 				e.printStackTrace();
@@ -164,6 +166,7 @@ public class VerbindungsFenster extends JFrame {
 
 	//Clientvariablen
 	private int ID;
+	private int AbbauKosten;
 	private boolean lastRound;
 	private int runde;
 	private int marktPreis;
@@ -190,6 +193,10 @@ public class VerbindungsFenster extends JFrame {
 		spieler.Lagermenge = lagermenge;
 	}
 
+	public void setAbbaumenge(int abbaumenge) {
+		spieler.Abbaumenge = abbaumenge;
+	}
+
 	public void setVerkaufsmenge(int verkauf) {
 		spieler.Verkaufsmenge = verkauf;
 	}
@@ -204,6 +211,10 @@ public class VerbindungsFenster extends JFrame {
 
 	public void setGenommenerKredit(int kredit) {
 		spieler.GenommenerKredit = kredit;
+	}
+
+	public int getAbbauKosten(){
+		return AbbauKosten;
 	}
 
 	public void setKreditLaufzeit(int laufzeit) {
@@ -269,6 +280,8 @@ public class VerbindungsFenster extends JFrame {
 
 			msg = "Lagermenge:"+spieler.Lagermenge;
 			spieler.Lagermenge = 0;
+			msg = "Abbaumenge:"+spieler.Abbaumenge;
+			spieler.Abbaumenge = 0;
 			sendToOut(s,msg);
 			msg = "Verkaufsmenge:"+spieler.Verkaufsmenge;
 			spieler.Verkaufsmenge = 0;
@@ -590,6 +603,12 @@ public class VerbindungsFenster extends JFrame {
 				//public RundenDaten(int Runde, int Kapital, int Geldkapital, int Geldaenderung,int Lager, int Lagermenge, int Verkaufsmenge, float Kreditprozentsatz, int Kreditnahme)
 				RundenDaten rd = new RundenDaten(RRunde, RKapital, RGeldkapital, RGeldaenderung, RLager, RLagermenge, RVerkaufsmenge, RZinssatz, RGenommenerKredit);
 				rundenDaten.add(rd);
+				break;
+			case 18:
+				//}else if(received.contains("Abbaukosten:")) {
+				//	cw.ResponseBearbeiten(18, received);
+				//}
+				AbbauKosten = Integer.parseInt(response.substring(response.lastIndexOf(":")+1));
 				break;
 		}
 	}

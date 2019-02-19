@@ -366,6 +366,8 @@ public class ServerFenster extends JFrame {
 									winner = s;
 								}
 							}
+							db.RundeLoggen();
+
 							for(int i=0;i<spieler.size();i++) {
 								if(spieler.get(i)==winner) {
 									sendToOut(spieler.get(i).Socket, "!winner!");
