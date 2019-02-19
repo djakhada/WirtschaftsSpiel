@@ -47,8 +47,9 @@ public class ServerFenster extends JFrame {
 	private JTextField txtStartkapital;
 	private JTextField txtKreditzinssatz;
 	private JTextField txtMaximalKredit;
+	JLabel lblAktuellerMarktbedarft = new JLabel("Aktueller Marktbedarf: 0t");
 	private JTextField txtMaximaleSpieler;
-	JLabel lblAktuellerMarktpreis = new JLabel("Aktueller Marktpreis:");
+	JLabel lblAktuellerMarktpreis = new JLabel("Aktueller Marktpreis: 25€");
 	JButton btnSpielStarten = new JButton("Spiel eröffnen");
 	private JTable table;
 	private int Spieleranzahl = 0;
@@ -99,6 +100,8 @@ public class ServerFenster extends JFrame {
 		lblRunde.setText("Runde: "+Runde);
 		markt.NaechsteRunde();
 		lblAktuellerMarktpreis.setText("Aktueller Marktpreis: "+markt.preis+'€');
+		//JLabel lblAktuellerMarktbedarft = new JLabel("Aktueller Marktbedarf: 0t");
+		lblAktuellerMarktbedarft.setText("Aktueller Marktbedarf: "+markt.marktBedarf+'t');
 
 		for(int i=0;i<spieler.size();i++) {
 			Spieler s = spieler.get(i);
@@ -396,7 +399,7 @@ public class ServerFenster extends JFrame {
 		contentPane.add(lblNachdemDasSpiel);
 
 
-		lblRunde.setBounds(182, 291, 84, 16);
+		lblRunde.setBounds(181, 320, 84, 16);
 		contentPane.add(lblRunde);
 
 		txtErzmenge = new JTextField();
@@ -440,7 +443,7 @@ public class ServerFenster extends JFrame {
 		txtBenutzer.setColumns(10);
 
 		txtPass = new JTextField();
-		txtPass.setText("test12345");
+		txtPass.setText("");
 		txtPass.setColumns(10);
 		txtPass.setBounds(628, 318, 114, 20);
 		contentPane.add(txtPass);
@@ -473,6 +476,10 @@ public class ServerFenster extends JFrame {
 		}
 		lblIP.setBounds(456, 265, 286, 14);
 		contentPane.add(lblIP);
+
+
+		lblAktuellerMarktbedarft.setBounds(181, 292, 237, 14);
+		contentPane.add(lblAktuellerMarktbedarft);
 
 
 	}

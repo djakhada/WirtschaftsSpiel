@@ -12,10 +12,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 //Netzwerk libs
-import java.io.*; 
+import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.Scanner; 
+import java.util.Scanner;
 
 
 class RundenDaten {
@@ -28,7 +28,7 @@ class RundenDaten {
 	final int Verkaufsmenge;
 	final float Kreditprozentsatz;
 	final int Kreditnahme;
-	
+
 	public RundenDaten(int Runde, int Kapital, int Geldkapital, int Geldaenderung,int Lager, int Lagermenge, int Verkaufsmenge, float Kreditprozentsatz, int Kreditnahme) {
 		this.Runde = Runde;
 		this.Kapital = Kapital;
@@ -47,25 +47,25 @@ class ResponseHandler extends Thread {
 	final DataOutputStream dos;
 	final Socket s;
 	final VerbindungsFenster cw;
-	
+
 	public ResponseHandler(VerbindungsFenster cw, Socket s, DataInputStream dis, DataOutputStream dos) {
 		this.cw = cw;
 		this.dis = dis;
 		this.dos = dos;
 		this.s = s;
 	}
-	
+
 	@Override
-	public void run() 
+	public void run()
 	{
 		/*
-		 * 
-		 * 
-		 * 
-		 * 
-		 * 
+		 *
+		 *
+		 *
+		 *
+		 *
 		 * UNBEDINGT CHECKEN WARUM STATIC BEI RESPONSEBEARBEITEN RICHTIG IST UND NICHT DAUERND
-		 *PASSEN MUSS LOL 
+		 *PASSEN MUSS LOL
 		 *
 		 *
 		 *
@@ -87,10 +87,10 @@ class ResponseHandler extends Thread {
 		 * */
 		System.out.println("Client: ResponseHandler wurde gestartet und hört dem Server jetzt zu.");
 		String received;
-		while (true) 
+		while (true)
 		{
-			try {	
-				
+			try {
+
 				received = dis.readUTF();
 				if(received.contains("Kapital")){
 					cw.ResponseBearbeiten(0,received);
@@ -126,7 +126,7 @@ class ResponseHandler extends Thread {
 					cw.ResponseBearbeiten(15, received);
 				}else if(received.equals("!winner!")) {
 					cw.ResponseBearbeiten(16);
-				}else if(received.equals("!loser")) { 
+				}else if(received.equals("!loser")) {
 					cw.ResponseBearbeiten(17);
 				}
 			}catch(IOException e) {
@@ -138,29 +138,30 @@ class ResponseHandler extends Thread {
 
 public class VerbindungsFenster extends JFrame {
 
+	Endscreen es = new Endscreen();
 	private JPanel contentPane;
 	private JTextField txtIP;
 	private JTextField txtPORT;
 	private JTextField txtNAME;
 	JButton btnVerbindungTrennen = new JButton("Verbindung Trennen");
 	JButton btnVerbinden = new JButton("Verbinden");
-	
+
 	private Socket s = null;
 	private DataInputStream dis = null;
 	private DataOutputStream dos = null;
-	
-	
-	
+
+
+
 	protected GameInterface GI;
-	
-	
-	
+
+
+
 	ResponseHandler rp;
-	
+
 	public ArrayList<RundenDaten> rundenDaten = new ArrayList<>();
-	
-	
-	
+
+
+
 	//Clientvariablen
 	private int ID;
 	private boolean lastRound;
@@ -169,7 +170,7 @@ public class VerbindungsFenster extends JFrame {
 	private int maxKredit;
 	private boolean amWinner;
 	private Spieler spieler = new Spieler();
-	
+
 	public int getGeldKapital() {
 		return spieler.Geldkapital;
 	}
@@ -179,76 +180,76 @@ public class VerbindungsFenster extends JFrame {
 	public int getKapital() {
 		return spieler.Kapital;
 	}
-	
-	
+
+
 	public int getLager() {
 		return spieler.Lager;
 	}
-	
+
 	public void setLagermenge(int lagermenge) {
 		spieler.Lagermenge = lagermenge;
 	}
-	
+
 	public void setVerkaufsmenge(int verkauf) {
 		spieler.Verkaufsmenge = verkauf;
 	}
-	
+
 	public int getVerkaufsmenge() {
 		return spieler.Verkaufsmenge;
 	}
-	
+
 	public int getLagermenge() {
 		return spieler.Lagermenge;
 	}
-	
+
 	public void setGenommenerKredit(int kredit) {
 		spieler.GenommenerKredit = kredit;
 	}
-	
+
 	public void setKreditLaufzeit(int laufzeit) {
 		spieler.KreditLaufzeit = laufzeit;
 	}
-	
+
 	public int getKreditLaufzeit() {
 		return spieler.KreditLaufzeit;
 	}
-	
+
 	public int getMaxKredit() {
 		return maxKredit;
 	}
-	
+
 	public int getGeldaenderung() {
 		return spieler.Geldaenderung;
 	}
-	
+
 	public int getKredit() {
 		return spieler.Kredit;
 	}
-	
+
 	public float getZinssatz() {
 		return spieler.Zinssatz;
 	}
 	public int getMarktPreis() {
 		return marktPreis;
 	}
-	
+
 	public int getLagerMax() {
 		return spieler.LagerMax;
 	}
-	
+
 	public int getMaxAbbau() {
 		return spieler.maxAbbaumenge;
 	}
-	
+
 	public int getRound() {
 		return runde;
 	}
-	
+
 	public void setForschungskosten(int kosten)
 	{
 		spieler.Forschungskosten = kosten;
 	}
-	
+
 	public void nextRound() { //Vom Server die Nachricht dass eine neue Nachricht beginnt.
 		sendToOut(s,"updateme");
 		Thread t = new Thread() {
@@ -258,14 +259,14 @@ public class VerbindungsFenster extends JFrame {
 			}
 		};
 		t.start();
-		
+
 	}
-	
+
 	public void confirmRound() { //Werte des Clients bestätigen
 		//Lagermenge, Verkaufsmenge, Kreditmenge, Kreditlaufzeit
 			System.out.println("Client: Fange an Daten an den Server zu übermitteln.");
 			String msg;
-			
+
 			msg = "Lagermenge:"+spieler.Lagermenge;
 			spieler.Lagermenge = 0;
 			sendToOut(s,msg);
@@ -296,29 +297,29 @@ public class VerbindungsFenster extends JFrame {
 		});
 	}
 
-	
+
 	public void sendToOut(Socket s, String msg) {
 		try {
 			DataOutputStream d = new DataOutputStream(s.getOutputStream());
 			d.writeUTF(msg);
 			System.out.println("Client[ich]->Server["+s.getRemoteSocketAddress().toString()+"]: "+"\""+msg+"\"");
-			
+
 		} catch (IOException e) {
 			System.out.println("Fehler bei sendToOut. Nachricht an Server["+s.getRemoteSocketAddress().toString()+"]: "+"\""+msg+"\"");
 		}
 	}
-	
+
 	public void connectToServer(String ip, int port, String name, boolean showMessage) throws UnknownHostException, IOException {
 		try {
 			s = new Socket (InetAddress.getByName(ip), port);
-			dis = new DataInputStream(s.getInputStream()); 
+			dis = new DataInputStream(s.getInputStream());
 			System.out.println("Client: Erfolgreich zum Server: ["+s+"] verbunden.");
 			sendToOut(s, "join:"+name);
 			String received;
 			while(true) {
 				try {
 					received = dis.readUTF();
-					
+
 					if(received.equals("joined")) {
 						if(showMessage)JOptionPane.showMessageDialog(null, "Erfolgreich dem Spiel beigetreten. Warte nun darauf, dass der Host das Spiel startet.");
 						rp = new ResponseHandler(this, s, dis, dos);
@@ -326,11 +327,11 @@ public class VerbindungsFenster extends JFrame {
 						Thread t = rp;
 						t.start();
 						sendToOut(s,"updateme");
-						
+
 						GI = new GameInterface(this);
-						
+
 						break;
-						
+
 					}else if(received.equals("fullgame")) {
 						if(showMessage)JOptionPane.showMessageDialog(null, "Konnte dem Spiel nicht beitreten, da das Spiel voll ist.");
 						break;
@@ -339,14 +340,14 @@ public class VerbindungsFenster extends JFrame {
 					System.out.println("Client: Verbindug zum Server fehlgeschlagen");
 					break;
 				}
-			}			
+			}
 			}catch(ConnectException e) {
 				JOptionPane.showMessageDialog(null, "Verbindung zum Server fehlgeschlagen");
 				btnVerbinden.setEnabled(true);
 			}
-		
+
 	}
-	
+
 	/**
 	 * Create the frame.
 	 */
@@ -359,42 +360,42 @@ public class VerbindungsFenster extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		
+
 		JPanel connectPanel = new JPanel();
 		contentPane.add(connectPanel, BorderLayout.CENTER);
 		connectPanel.setLayout(null);
-		
+
 		txtIP = new JTextField();
 		txtIP.setText("127.0.0.1");
 		txtIP.setBounds(74, 11, 133, 20);
 		connectPanel.add(txtIP);
 		txtIP.setColumns(10);
-		
+
 		JLabel lblIpadresse = new JLabel("IP-Adresse");
 		lblIpadresse.setBounds(10, 14, 74, 14);
 		connectPanel.add(lblIpadresse);
-		
+
 		JLabel lblPort = new JLabel("Port");
 		lblPort.setBounds(10, 42, 74, 14);
 		connectPanel.add(lblPort);
-		
+
 		txtPORT = new JTextField();
 		txtPORT.setText("23554");
 		txtPORT.setColumns(10);
 		txtPORT.setBounds(74, 39, 133, 20);
 		connectPanel.add(txtPORT);
-		
+
 		JLabel lblName = new JLabel("Name");
 		lblName.setBounds(10, 67, 74, 14);
 		connectPanel.add(lblName);
-		
+
 		txtNAME = new JTextField();
 		txtNAME.setText("Spieler");
 		txtNAME.setColumns(10);
 		txtNAME.setBounds(74, 64, 133, 20);
 		connectPanel.add(txtNAME);
-		
-		
+
+
 		btnVerbinden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnVerbinden.setEnabled(false);
@@ -408,25 +409,25 @@ public class VerbindungsFenster extends JFrame {
 						}
 					}
 				}).start();
-				
+
 			}
 		});
 		btnVerbinden.setBounds(10, 92, 197, 23);
 		connectPanel.add(btnVerbinden);
-		
-		
+
+
 		btnVerbindungTrennen.setEnabled(false);
 		btnVerbindungTrennen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					System.out.println("Client: Trennen");
 					sendToOut(s, "quit");
-					
+
 					rp.interrupt();
 					dis.close();
 			        dos.close();
 			        s.close();
-			        
+
 			        System.out.println("Client: Erfolgreich getrennt");
 			        btnVerbinden.setEnabled(true);
 				} catch (IOException e1) {
@@ -437,7 +438,7 @@ public class VerbindungsFenster extends JFrame {
 		btnVerbindungTrennen.setBounds(10, 126, 197, 23);					//
 		connectPanel.add(btnVerbindungTrennen);
 	}
-	
+
 	//static public void ResponseBearbeiten(String response) {
 	/*	https://jc-downloads.s3.amazonaws.com/git-team-cheatsheet.pdf
 	 * *ResponseIDs:
@@ -446,15 +447,19 @@ public class VerbindungsFenster extends JFrame {
 		 *2: Kredit:
 		 *3: Marktpreis:
 		*/
-	
+
 	public void EndGame() { //16 winner 17 loser
-		Endscreen es;
-		if(amWinner) es= new Endscreen(rundenDaten, true);
-		else es = new Endscreen(rundenDaten, false);
+
+		/*if(amWinner) es= new Endscreen(rundenDaten, true);
+		else es = new Endscreen(rundenDaten, false);*/
+		es.setWinner(amWinner);
+		es.setRundenDaten(rundenDaten);
 		es.getStats(ID);
 		es.setVisible(true);
 		GI.setVisible(false);
 	}
+
+
 	public void ResponseBearbeiten(int responseID) {
 		System.out.println("Client[Ich]<-Server: ResponseID: "+responseID);
 		switch(responseID) {
@@ -482,7 +487,7 @@ public class VerbindungsFenster extends JFrame {
 				break;
 		}
 	}
-	
+
 	public void ResponseBearbeiten(int responseID, String response) {
 		System.out.println("Client[Ich]<-Server: '"+response+"' - ResponseID: "+responseID);
 		switch(responseID) {
@@ -542,42 +547,42 @@ public class VerbindungsFenster extends JFrame {
 				//     1/250000/250000/0/5000/0/20.0/0
 				int RRunde = Integer.parseInt(RundenDaten.substring(0, RundenDaten.indexOf('/')));
 				System.out.println("Rundendaten: Runde: "+RRunde);
-				
+
 				RundenDaten = RundenDaten.substring(RundenDaten.indexOf('/')+1);
 				//     250000/250000/0/5000/0/20.0/0
 				int RKapital = Integer.parseInt(RundenDaten.substring(0, RundenDaten.indexOf('/')));
 				System.out.println("Rundendaten: Kapital: "+RKapital);
-				
+
 				RundenDaten = RundenDaten.substring(RundenDaten.indexOf('/')+1);
 				//     250000/250000/0/5000/0/20.0/0
 				int RGeldaenderung = Integer.parseInt(RundenDaten.substring(0, RundenDaten.indexOf('/')));
 				System.out.println("Rundendaten: Geldaenderung: "+RGeldaenderung);
-				
+
 				RundenDaten = RundenDaten.substring(RundenDaten.indexOf('/')+1);
 				//     250000/0/5000/0/20.0/0
 				int RGeldkapital = Integer.parseInt(RundenDaten.substring(0, RundenDaten.indexOf('/')));
 				System.out.println("Rundendaten: Geldkapital: "+RGeldkapital);
-				
+
 				RundenDaten = RundenDaten.substring(RundenDaten.indexOf('/')+1);
 				//     0/5000/0/20.0/0
 				int RLager = Integer.parseInt(RundenDaten.substring(0, RundenDaten.indexOf('/')));
 				System.out.println("Rundendaten: Lager: "+RLager);
-				
+
 				RundenDaten = RundenDaten.substring(RundenDaten.indexOf('/')+1);
 				//     5000/0/20.0/0
 				int RLagermenge = Integer.parseInt(RundenDaten.substring(0, RundenDaten.indexOf('/')));
 				System.out.println("Rundendaten: Lagermenge: "+RLagermenge);
-				
+
 				RundenDaten = RundenDaten.substring(RundenDaten.indexOf('/')+1);
 				//     0/20.0/0
 				int RVerkaufsmenge = Integer.parseInt(RundenDaten.substring(0, RundenDaten.indexOf('/')));
 				System.out.println("Rundendaten: Verkaufsmenge: "+RVerkaufsmenge);
-				
+
 				RundenDaten = RundenDaten.substring(RundenDaten.indexOf('/')+1);
 				//     20.0/0
 				float RZinssatz = Float.parseFloat(RundenDaten.substring(0, RundenDaten.indexOf('/')));
 				System.out.println("Rundendaten: Zinssatz: "+RZinssatz);
-				
+
 				RundenDaten = RundenDaten.substring(RundenDaten.indexOf('/')+1);
 				//     0
 				int RGenommenerKredit = Integer.parseInt(RundenDaten);
@@ -586,7 +591,7 @@ public class VerbindungsFenster extends JFrame {
 				RundenDaten rd = new RundenDaten(RRunde, RKapital, RGeldkapital, RGeldaenderung, RLager, RLagermenge, RVerkaufsmenge, RZinssatz, RGenommenerKredit);
 				rundenDaten.add(rd);
 				break;
-		}		
+		}
 	}
 
 }

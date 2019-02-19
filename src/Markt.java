@@ -41,7 +41,6 @@ public class Markt {
 	public void KapitaleBerechnen(){
 		//Neuen Marktpreis berechnen
 		if(!GameStart) {
-			preis = 150;
 			for(int i=0; i<spieler.size();i++){
 				Spieler s = spieler.get(i);
 
@@ -93,9 +92,15 @@ public class Markt {
 		int spielerAnzahl = spieler.size();
 		int marktBedarfLetzteRunde = marktBedarf;
 		if(Runde==1){
+			verkaufLetzteRunde = 0;
 			marktBedarf = (int)(spielerAnzahl * maxAbbauStart * 0.75 * Runde * 0.15 - verkaufLetzteRunde + (spielerAnzahl*maxAbbauStart*2));
 		}else{
+			for(int i=0; i<spieler.size();i++){
+				Spieler s = spieler.get(i);
+				verkaufLetzteRunde=verkaufLetzteRunde+s.Verkaufsmenge;
+			}
 			marktBedarf = (int)(spielerAnzahl * maxAbbauStart * 0.75 * Runde * 0.15 - verkaufLetzteRunde + marktBedarf);
+			verkaufLetzteRunde=0;
 		}
 		//deltaMarktBedarf = marktBedarf-marktBedarfLetzteRunde			(5000+5500)=
 		preis = (marktBedarf-marktBedarfLetzteRunde)/2000+preis;

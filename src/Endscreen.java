@@ -23,10 +23,10 @@ public class Endscreen extends JFrame {
 	private JTable rundenTable;
 	private JLabel lblGewonnen;
 	private JTable table;
-	
-	
 
-	
+
+
+
 	/**
 	 * Launch the application.
 	 */
@@ -45,10 +45,10 @@ public class Endscreen extends JFrame {
 
 	/**
 	 * Create the frame.
-	 * 
-	 * 
+	 *
+	 *
 	 */
-	
+
 	public void getStats(int ID) {
 		JOptionPane.showMessageDialog(null, "Das Spiel ist vorbei: Deine ID: "+ID);
 		DefaultTableModel rundenTableModel = (DefaultTableModel) rundenTable.getModel();
@@ -58,28 +58,36 @@ public class Endscreen extends JFrame {
 			rundenTableModel.addRow(new Object[] {r.Runde, r.Kapital, r.Geldkapital, r.Geldaenderung, r.Lager, r.Lagermenge,r.Verkaufsmenge, r.Kreditprozentsatz, r.Kreditnahme});
 		}
 	}
-	
-	final ArrayList<RundenDaten> rd;
-	
-	public Endscreen(ArrayList<RundenDaten> rd, boolean isWinner) { //boolean isWInner
+
+	private ArrayList<RundenDaten> rd;
+	private boolean isWinner;
+
+	public void setWinner(boolean winner){
+		this.isWinner=winner;
 		if(isWinner)lblGewonnen.setText("Du hast gewonnen!");
 		else lblGewonnen.setText("Du leider verloren gewonnen...");
-		
-		this.rd  = rd;
+	}
+
+	public void setRundenDaten(ArrayList<RundenDaten> rd){
+		this.rd = rd;
+	}
+
+	public Endscreen() { //boolean isWInner
+		//this.rd  = rd;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 750, 500);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(563, 83, 142, 354);
 		contentPane.add(scrollPane);
-		
-		
+
+
 		lblGewonnen = new JLabel("Du hast gewonnen!");
-		
+
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
@@ -97,12 +105,12 @@ public class Endscreen extends JFrame {
 		});
 		table.getColumnModel().getColumn(0).setResizable(false);
 		scrollPane.setViewportView(table);
-		
+
 		scrollPane_1 = new JScrollPane();
 		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane_1.setBounds(25, 83, 514, 354);
 		contentPane.add(scrollPane_1);
-		
+
 		rundenTable = new JTable();
 		scrollPane_1.setViewportView(rundenTable);
 		rundenTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -131,12 +139,12 @@ public class Endscreen extends JFrame {
 		rundenTable.getColumnModel().getColumn(7).setResizable(false);
 		rundenTable.getColumnModel().getColumn(7).setPreferredWidth(100);
 		rundenTable.getColumnModel().getColumn(8).setResizable(false);
-		
-		
+
+
 		lblGewonnen.setFont(new Font("Dialog", Font.BOLD, 23));
 		lblGewonnen.setBounds(197, 12, 348, 49);
 		contentPane.add(lblGewonnen);
 	//*******************************************************
-		
+
 	}
 }
