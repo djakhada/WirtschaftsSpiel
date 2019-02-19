@@ -280,12 +280,16 @@ public class VerbindungsFenster extends JFrame {
 
 			msg = "Lagermenge:"+spieler.Lagermenge;
 			spieler.Lagermenge = 0;
+			sendToOut(s,msg);
+
 			msg = "Abbaumenge:"+spieler.Abbaumenge;
 			spieler.Abbaumenge = 0;
 			sendToOut(s,msg);
+
 			msg = "Verkaufsmenge:"+spieler.Verkaufsmenge;
 			spieler.Verkaufsmenge = 0;
 			sendToOut(s,msg);
+
 			if(spieler.GenommenerKredit>0) {
 				msg = "Kreditmenge:"+spieler.GenommenerKredit;
 				sendToOut(s,msg);
