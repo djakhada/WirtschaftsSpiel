@@ -42,7 +42,7 @@ public class Markt {
 	}
 
 	public void AbbauKostenBerechnen(){
-		Abbaukosten = 10 + new Random().nextInt(5);
+		Abbaukosten = 5 + new Random().nextInt(3);
 	}
 
 	public void KapitaleBerechnen(){
@@ -68,7 +68,7 @@ public class Markt {
 					}else s.isKreditNeu=false;
 				}
 				Kapitaleinfluss = s.Verkaufsmenge * preis;
-				Kapitaleinfluss = Kapitaleinfluss - Kreditrate - abbauKosten - 25000;
+				Kapitaleinfluss = Kapitaleinfluss - Kreditrate - abbauKosten - 15000; //Fixkosten = 15000
 				s.Verkaufsmenge = 0;
 
 
@@ -114,7 +114,6 @@ public class Markt {
 			marktBedarf = (int)(spielerAnzahl * maxAbbauStart * 0.75 * Runde * 0.15 - verkaufLetzteRunde + marktBedarf);
 			verkaufLetzteRunde=0;
 		}
-		//deltaMarktBedarf = marktBedarf-marktBedarfLetzteRunde			(5000+5500)=
 		preis = (marktBedarf-marktBedarfLetzteRunde)/2000+preis;
 	}
 

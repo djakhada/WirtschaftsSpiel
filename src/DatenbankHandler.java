@@ -29,7 +29,7 @@ public class DatenbankHandler extends Thread{
 	public void run() {
 		System.out.println("DatenbankHandler: Versuche nun zu Datenbank zu verbinden.");
 		System.out.println("->Werte: "+ip+":"+port+" DB: "+Datenbankname);
-
+		//Versuchen eine Verbindung zur MySQL-Datenbank herzustellen
 		try {
 			this.con = DriverManager.getConnection("jdbc:mysql://" +ip+":"+port+"/"+Datenbankname, Nutzer, Passwort);
 			System.out.println("DatenbankHandler: Erfolgreich zur Datenbank verbunden.");
@@ -39,6 +39,7 @@ public class DatenbankHandler extends Thread{
 		}
 	}
 
+	//Allgemeine Methode um SQL-Befehle auszufuehren
 	public void sendQuery(String sqlQuery) {
 		try {
 			this.con.createStatement().execute(sqlQuery);
@@ -47,6 +48,7 @@ public class DatenbankHandler extends Thread{
 		}
 	}
 
+	//Spieler zur Datenbank hinzufuegen
 	public void SpielerHinzufuegen() {
 		String msg;
 		for(int i=0; i<spieler.size();i++){
@@ -57,6 +59,7 @@ public class DatenbankHandler extends Thread{
 		}
 	}
 
+	//Hier werden an jeden Client die aktuellen Daten der Runde uebermittelt. Siehe Dokumentation (Djamal): Datenuebertragung
 	public void RundeLoggen() {
 		String msg;
 		for(int i=0; i<spieler.size();i++){
@@ -65,24 +68,12 @@ public class DatenbankHandler extends Thread{
 			System.out.println("DatenbankHandler: SQL Query:\""+msg+'"');
 			sendQuery(msg);
 
-
-			/*
-			 * this.Runde = Runde;
-			 * this.Kapital = Kapital;
-				this.Geldkapital = Geldkapital;
-				this.Geldaenderung = Geldaenderung;
-				this.Lager = Lager;
-				this.Lagermenge = Lagermenge;
-				this.Verkaufsmenge = Verkaufsmenge;
-				this.Kreditprozentsatz = Kreditprozentsatz;
-				this.Kreditnahme = Kreditnahme;
-			 *
-			 */
 			msg = "-RundenDaten:"+sf.Runde+'/'+s.Kapital+'/'+s.Geldaenderung+'/'+s.Geldkapital+'/'+s.Lager+'/'+s.Lagermenge+'/'+s.Verkaufsmenge+'/'+s.Zinssatz+'/'+s.GenommenerKredit;
 			sf.sendToOut(s.Socket, msg);
 		}
 	}
 
+	//Alle vorherig bestehenden Daten aus der Datenbank entfernen.
 	public void clearAlles() {
 		String msg;
 		msg = "TRUNCATE TABLE runden";

@@ -58,40 +58,15 @@ class ResponseHandler extends Thread {
 	@Override
 	public void run()
 	{
-		/*
-		 *
-		 *
-		 *
-		 *
-		 *
-		 * UNBEDINGT CHECKEN WARUM STATIC BEI RESPONSEBEARBEITEN RICHTIG IST UND NICHT DAUERND
-		 *PASSEN MUSS LOL
-		 *
-		 *
-		 *
-	public Socket Socket = new Socket();
-		 *ResponseIDs:
-		 *0: Kapital
-		 *1: Zinssatz
-		 *2: Kredit
-		 *3: Marktpreis (marktPreis)
-		 *4: MaxKredit g
-		 *5: Gewinn/Geldänderung g
-		 *6: MaxAbbauMenge
-		 *7: Neue Lagermenge
-		 *8: Neue KreditLaufzeit
-		 *9: MaxKredit
-		 *10: Runde
-		 *
-		 *runde?
-		 * */
+		//Dem Server ständig zuhören und auf Antworten bzw. Nachrichten warten um diese zu verarbeiten
+		//Diesen Nachrichtenarten eine ID zuweisen
 		System.out.println("Client: ResponseHandler wurde gestartet und hört dem Server jetzt zu.");
 		String received;
-		while (true)
+		while (true) //Stetig versuchen den unteren Teil auszufuehren
 		{
 			try {
 
-				received = dis.readUTF();
+				received = dis.readUTF(); //Die Nachrichten vom Servers lesen
 				if(received.contains("Kapital")){
 					cw.ResponseBearbeiten(0,received);
 				}else if(received.contains("Zinssatz")) {

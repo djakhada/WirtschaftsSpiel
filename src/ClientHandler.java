@@ -80,6 +80,7 @@ public class ClientHandler extends Thread
 		}
 	}
 
+	//Neuen Spieler der Spielerliste hinzufuegen
 	public void addSpieler(List<Spieler> spielerListe, String Name,  int startKapital, boolean startkapitalKredit) {
 			Spieler s;
 			if(startkapitalKredit) {
@@ -112,8 +113,7 @@ public class ClientHandler extends Thread
 		this.interrupt();
 	}
 
-	//public void
-
+	//Was passiert wenn ClientHandler gestartet wird
 	@Override
 	public void run()
 	{
