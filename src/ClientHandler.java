@@ -40,6 +40,7 @@ public class ClientHandler extends Thread
 		this.startKreditZinssatz = sw.startKreditZinssatz;
 	}
 
+	//Neueste Werte an Spieler uebergeben
 	public void spielerUpdaten(Spieler spieler){
 		runde = sw.Runde;
 		String msg;
@@ -69,6 +70,7 @@ public class ClientHandler extends Thread
 		sendToOut(spieler.Socket, msg);
 	}
 
+	//Nachricht an Sockel s (Client) senden
 	public void sendToOut(Socket s, String msg) {
 		try {
 			DataOutputStream d = new DataOutputStream(s.getOutputStream());
@@ -83,7 +85,7 @@ public class ClientHandler extends Thread
 	//Neuen Spieler der Spielerliste hinzufuegen
 	public void addSpieler(List<Spieler> spielerListe, String Name,  int startKapital, boolean startkapitalKredit) {
 			Spieler s;
-			if(startkapitalKredit) {
+			if(startkapitalKredit) {//Wenn das Startkapital als Kredit gilt
 				 int Kredit = (int)(startKapital + (startKapital * (startKreditZinssatz/100)));
 				 s = new Spieler(Name, startKapital, Kredit, 0);
 				 s.Zinssatz = startKreditZinssatz;
@@ -101,8 +103,10 @@ public class ClientHandler extends Thread
 	}
 
 
+	//Verbindung schließen
 	private void CloseThread() {
 		try {
+			//Alle Streams und Sockel schließen, dann Thread beenden
 			s.close();
 			dis.close();
 			dos.close();
@@ -131,7 +135,7 @@ public class ClientHandler extends Thread
 					System.out.println("Server: Client " + IP +" (" +name+") möchte trennen.");
 					System.out.println("Server: Client " + IP +" (" +name+") wurde getrennt.");
 					CloseThread();
-					sw.spieler.remove(aktuellerSpieler);
+					sw.spieler.remove(aktuellerSpieler); //Spieler aus der Spielerliste entfernen
 					break;
 				}else if(received.contains("join:")){
 					name = received.substring(5);

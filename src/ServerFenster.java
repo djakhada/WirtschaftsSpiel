@@ -94,16 +94,16 @@ public class ServerFenster extends JFrame {
         });
     }
 
+    //Methode zum forcen der nächsten Runde
     public void NaechsteRunde() {
-        db.RundeLoggen();
+        db.RundeLoggen(); //Rundenwerte in Datenbank speichern und an Spieler uebergeben
         Runde++;
         lblRunde.setText("Runde: "+Runde);
         markt.NaechsteRunde();
         lblAktuellerMarktpreis.setText("Aktueller Marktpreis: "+markt.preis+'€');
-        //JLabel lblAktuellerMarktbedarft = new JLabel("Aktueller Marktbedarf: 0t");
         lblAktuellerMarktbedarft.setText("Aktueller Marktbedarf: "+markt.marktBedarf+'t');
 
-        for(int i=0;i<spieler.size();i++) {
+        for(int i=0;i<spieler.size();i++) { //An alle Spieler senden, dass eine neue Runde gestartet wurde
             Spieler s = spieler.get(i);
             s.isReady = false;
             if(letzteRunde!=2)sendToOut(s.Socket, "10NaechsteRunde:"+Runde);
@@ -113,6 +113,7 @@ public class ServerFenster extends JFrame {
         btnNaechsteRunde.setToolTipText("Noch nicht jeder Spieler ist bereit.");
     }
 
+    //Methode zum Serverstarten
     public void runServer(int port, boolean message) throws IOException{
         ServerSocket ss = new ServerSocket(port); //Neuen Server auf Port port eröffnen
         btnNaechsteRunde.setEnabled(true); //NaechsteRunde Knopf aktivieren
@@ -347,7 +348,7 @@ public class ServerFenster extends JFrame {
                     btnNaechsteRunde.setEnabled(false);
                     btnNaechsteRunde.setToolTipText("Noch nicht jeder Spieler ist bereit.");
                     markt.GameStart = false;
-                    //Spieler GUIs öffnen
+                    //Spieler GUIs öffnen (wenn der Host offiziell das Spiel eröffnet hat)
                     for(int i=0;i<spieler.size();i++) {
                         Spieler s = spieler.get(i);
                         try {
@@ -367,6 +368,7 @@ public class ServerFenster extends JFrame {
                         }else if(letzteRunde==2) {
                             Spieler winner = new Spieler();
                             int max = Integer.MIN_VALUE;
+                            //Gewinner festlegen indem man ueberprueft wer das höchste Kapital hat
                             for(int i=0;i<spieler.size();i++) {
                                 Spieler s = spieler.get(i);
                                 if(s.Kapital > max) {
@@ -377,12 +379,12 @@ public class ServerFenster extends JFrame {
                             db.RundeLoggen();
 
                             for(int i=0;i<spieler.size();i++) {
-                                if(spieler.get(i)==winner) {
+                                if(spieler.get(i)==winner) { //wenn der spieler gewinner ist, ihm die gewinnernachricht senden
                                     sendToOut(spieler.get(i).Socket, "!winner!");
                                 }else sendToOut(spieler.get(i).Socket, "!loser!");
                             }
 
-                            sendeAnAlle("!gameEnd!");
+                            sendeAnAlle("!gameEnd!"); //an alle senden, dass das Spiel vorbei ist
                             JOptionPane.showMessageDialog(null, "Das Spiel ist vorbei.");
                         }
                     }

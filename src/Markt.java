@@ -4,9 +4,9 @@ import java.util.Random;
 
 public class Markt {
 
-	public int preis=25, //Startpreis des Markts
-			preisMax=100, //Maximalpreis
-			preisMin=5, //Minimalpreis
+	public int preis=25, 			//Startpreis des Markts
+			preisMax=100, 			//Maximalpreis
+			preisMin=5, 			//Minimalpreis
 			Erzbestand = 1000000,
 			Runde = 1,
 			maxAbbauStart = 5000,
@@ -15,7 +15,7 @@ public class Markt {
 			Abbaukosten=15;
 	boolean GameStart = true;
 
-	public List<Spieler> spieler = new ArrayList<>();
+	public List<Spieler> spieler = new ArrayList<>();			//erstellt eine array liste
 
 	public Markt(List<Spieler> spieler){
 		this.spieler = spieler;
@@ -27,11 +27,11 @@ public class Markt {
 
 
 	public void NaechsteRunde() {
-		AbbauKostenBerechnen();
+		AbbauKostenBerechnen();					//Ruft die einzeneln funktionen auf
 		MaximaleAbbaumengeBerechnen();
 		MarktBerechnen();
 		KapitaleBerechnen();
-		Runde++;
+		Runde++;								//Zählt die Runde Hoch
 	}
 
 	//Maximale Erzmenge die noch vorhanden ist betrachten
@@ -41,7 +41,7 @@ public class Markt {
 		return Kapital;
 	}
 
-	public void AbbauKostenBerechnen(){
+	public void AbbauKostenBerechnen(){				//Die Kosten mit einer RAndom Zahl addieren um mehr zufall zu erzeugen
 		Abbaukosten = 5 + new Random().nextInt(3);
 	}
 
@@ -51,7 +51,7 @@ public class Markt {
 			for(int i=0; i<spieler.size();i++){
 				Spieler s = spieler.get(i);
 
-				s.Lager = s.Lager + s.Lagermenge;
+				s.Lager = s.Lager + s.Lagermenge;	//gib die menge die eingelagert werden soll an das Lager weiter
 				s.Lagermenge = 0;
 
 
@@ -60,14 +60,14 @@ public class Markt {
 
 				int Kreditrate = 0;
 				int Kapitaleinfluss;
-				if(s.KreditLaufzeit>0){
-					if(!s.isKreditNeu) {
-						Kreditrate = s.Kredit / s.KreditLaufzeit;
-						s.Kredit = s.Kredit - Kreditrate;
-						if(s.KreditLaufzeit>0)s.KreditLaufzeit--;
+				if(s.KreditLaufzeit>0){					//berechnet das neue Kapital
+					if(!s.isKreditNeu) {			//wenn der kredit neu ist
+						Kreditrate = s.Kredit / s.KreditLaufzeit; 	//berechnet man die Kreditrate zum abzahlen
+						s.Kredit = s.Kredit - Kreditrate;			//und zieht diese ab
+						if(s.KreditLaufzeit>0)s.KreditLaufzeit--;   //und setzt die Laufzeit runter
 					}else s.isKreditNeu=false;
 				}
-				Kapitaleinfluss = s.Verkaufsmenge * preis;
+				Kapitaleinfluss = s.Verkaufsmenge * preis;							  //Berechnet den kaputaleinfluss
 				Kapitaleinfluss = Kapitaleinfluss - Kreditrate - abbauKosten - 15000; //Fixkosten = 15000
 				s.Verkaufsmenge = 0;
 
@@ -82,10 +82,10 @@ public class Markt {
 
 
 				//ohne berücksichtigung von Forschung
-				s.Geldkapital = s.Geldkapital + Kapitaleinfluss;
+				s.Geldkapital = s.Geldkapital + Kapitaleinfluss;				//berechnent das neue Geldkapital
 
-				s.Geldaenderung = Kapitaleinfluss;
-				s.Kapital = (s.Lager * preis) + s.Geldkapital;
+				s.Geldaenderung = Kapitaleinfluss;								//sezt die geldänderung fest
+				s.Kapital = (s.Lager * preis) + s.Geldkapital;					//berechnet da neue Kapital
 				}
 		}
 	}
@@ -94,27 +94,27 @@ public class Markt {
 
 	public void MaximaleAbbaumengeBerechnen() {
 		for(int i=0; i<spieler.size();i++) {
-			Spieler s = spieler.get(i);
-			s.maxAbbaumenge = 5000;
+			Spieler s = spieler.get(i);				//holst sich die Anzahl der Spieler
+			s.maxAbbaumenge = 5000;					//und berechnet die insgesammte abbaumenge (immer 5000) ist fix
 		}
 	}
 
 
 	public void MarktBerechnen(){
-		int spielerAnzahl = spieler.size();
-		int marktBedarfLetzteRunde = marktBedarf;
-		if(Runde==1){
-			verkaufLetzteRunde = 0;
-			marktBedarf = (int)(spielerAnzahl * maxAbbauStart * 0.75 * Runde * 0.15 - verkaufLetzteRunde + (spielerAnzahl*maxAbbauStart*2));
-		}else{
+		int spielerAnzahl = spieler.size();						//holt sich die anzahl der spieler
+		int marktBedarfLetzteRunde = marktBedarf;				//holt den bedarf der letzten runde
+		if(Runde==1){														//wenn es die erstze Runde ist
+			verkaufLetzteRunde = 0;											//ist der verkauf in der letzten runde 0
+			marktBedarf = (int)(spielerAnzahl * maxAbbauStart * 0.75 * Runde * 0.15 - verkaufLetzteRunde + (spielerAnzahl*maxAbbauStart*2)); 	// unsere formel zur Marktberechnung
+		}else{   	//wenn es nicht die erste runde ist
 			for(int i=0; i<spieler.size();i++){
 				Spieler s = spieler.get(i);
-				verkaufLetzteRunde=verkaufLetzteRunde+s.Verkaufsmenge;
+				verkaufLetzteRunde=verkaufLetzteRunde+s.Verkaufsmenge;			//holst er sich alle verkaufsmengen
 			}
-			marktBedarf = (int)(spielerAnzahl * maxAbbauStart * 0.75 * Runde * 0.15 - verkaufLetzteRunde + marktBedarf);
+			marktBedarf = (int)(spielerAnzahl * maxAbbauStart * 0.75 * Runde * 0.15 - verkaufLetzteRunde + marktBedarf);	//berechnet dadurch den Marktbedarf
 			verkaufLetzteRunde=0;
 		}
-		preis = (marktBedarf-marktBedarfLetzteRunde)/2000+preis;
+		preis = (marktBedarf-marktBedarfLetzteRunde)/2000+preis;				//Und erechnet den preis für die nächste runde
 	}
 
 }

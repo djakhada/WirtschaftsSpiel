@@ -15,6 +15,7 @@ public class DatenbankHandler extends Thread{
 	Connection con;
 
 
+	//Konstruktor zum uebergeben der Daten
 	public DatenbankHandler(ServerFenster sf, List<Spieler> spieler, String ip, int port, String Datenbankname, String Nutzer, String Passwort) {
 		this.sf = sf;
 		this.ip = ip;

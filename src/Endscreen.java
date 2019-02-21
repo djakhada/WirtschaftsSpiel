@@ -49,6 +49,7 @@ public class Endscreen extends JFrame {
 	 *
 	 */
 
+	// Werte aus Rundendatenliste zur Tabelle hinzufuegen
 	public void getStats(int ID) {
 		JOptionPane.showMessageDialog(null, "Das Spiel ist vorbei: Deine ID: "+ID);
 		DefaultTableModel rundenTableModel = (DefaultTableModel) rundenTable.getModel();
@@ -62,12 +63,14 @@ public class Endscreen extends JFrame {
 	private ArrayList<RundenDaten> rd;
 	private boolean isWinner;
 
+	//Festlegen ob Gewinner or nah
 	public void setWinner(boolean winner){
 		this.isWinner=winner;
 		if(isWinner)lblGewonnen.setText("Du hast gewonnen!");
 		else lblGewonnen.setText("Du hast leider verloren...");
 	}
 
+	//Setter fuer Rundendaten
 	public void setRundenDaten(ArrayList<RundenDaten> rd){
 		this.rd = rd;
 	}

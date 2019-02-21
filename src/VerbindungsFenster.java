@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 
+//Klasse fuer Rundendaten
 class RundenDaten {
 	final int Runde;
 	final int Kapital;
@@ -42,6 +43,7 @@ class RundenDaten {
 	}
 }
 
+//Handlerklasse um Nachrichten vom Server zu verarbeiten
 class ResponseHandler extends Thread {
 	final DataInputStream dis;
 	final DataOutputStream dos;
@@ -114,8 +116,8 @@ class ResponseHandler extends Thread {
 }
 
 public class VerbindungsFenster extends JFrame {
-
-	Endscreen es = new Endscreen();
+	Endscreen es = new Endscreen(); //Neue Instanz des Endscreens erstellen und initialisieren
+	protected GameInterface GI; //und GameInterface
 	private JPanel contentPane;
 	private JTextField txtIP;
 	private JTextField txtPORT;
@@ -123,18 +125,16 @@ public class VerbindungsFenster extends JFrame {
 	JButton btnVerbindungTrennen = new JButton("Verbindung Trennen");
 	JButton btnVerbinden = new JButton("Verbinden");
 
+	//Sockel etc. erstellen
 	private Socket s = null;
 	private DataInputStream dis = null;
 	private DataOutputStream dos = null;
 
-
-
-	protected GameInterface GI;
-
-
+	private String D = "Djamal", B = "Birk", M = "Mike";
 
 	ResponseHandler rp;
 
+	//Neue Liste fuer Rundendaten erstellen und initialisieren
 	public ArrayList<RundenDaten> rundenDaten = new ArrayList<>();
 
 
@@ -149,16 +149,20 @@ public class VerbindungsFenster extends JFrame {
 	private boolean amWinner;
 	private Spieler spieler = new Spieler();
 
+
+	//Getter- und Settermethoden
+
 	public int getGeldKapital() {
 		return spieler.Geldkapital;
 	}
+
 	private void setKapital(int kapital) {
 		spieler.Geldkapital = kapital;
 	}
+
 	public int getKapital() {
 		return spieler.Kapital;
 	}
-
 
 	public int getLager() {
 		return spieler.Lager;
@@ -237,15 +241,14 @@ public class VerbindungsFenster extends JFrame {
 	}
 
 	public void nextRound() { //Vom Server die Nachricht dass eine neue Nachricht beginnt.
-		sendToOut(s,"updateme");
+		sendToOut(s,"updateme"); //Nach update der Daten fragen
 		Thread t = new Thread() {
 			public void run() {
 				GI.naechsteRound(runde);
-				this.interrupt();
+				this.interrupt(); //Thread schließen, nachdem die nächste Runde gestartet wurde
 			}
 		};
 		t.start();
-
 	}
 
 	public void confirmRound() { //Werte des Clients bestätigen
@@ -274,6 +277,7 @@ public class VerbindungsFenster extends JFrame {
 			sendToOut(s,msg);
 			msg = "ready";
 			sendToOut(s,msg);
+			//Werte uebergeben und uebergeben, dass der Spieler bereit ist
 	}
 
 	public static void main(String[] args) {
@@ -290,6 +294,7 @@ public class VerbindungsFenster extends JFrame {
 	}
 
 
+	//Nachricht an Socket s (Server) senden
 	public void sendToOut(Socket s, String msg) {
 		try {
 			DataOutputStream d = new DataOutputStream(s.getOutputStream());
@@ -301,8 +306,10 @@ public class VerbindungsFenster extends JFrame {
 		}
 	}
 
+	//Methode um Verbindung zum Server herzustellen
 	public void connectToServer(String ip, int port, String name, boolean showMessage) throws UnknownHostException, IOException {
 		try {
+			//Sockel etc erstellen
 			s = new Socket (InetAddress.getByName(ip), port);
 			dis = new DataInputStream(s.getInputStream());
 			System.out.println("Client: Erfolgreich zum Server: ["+s+"] verbunden.");
@@ -312,17 +319,16 @@ public class VerbindungsFenster extends JFrame {
 				try {
 					received = dis.readUTF();
 
+					//Wenn "joined" empfangen wird, ist klar dass wir erfolgreich beigetreten sind und wir können das GameInterface zeigen und responsehandler starten
 					if(received.equals("joined")) {
 						if(showMessage)JOptionPane.showMessageDialog(null, "Erfolgreich dem Spiel beigetreten. Warte nun darauf, dass der Host das Spiel startet.");
 						rp = new ResponseHandler(this, s, dis, dos);
 						btnVerbindungTrennen.setEnabled(true);
 						Thread t = rp;
-						t.start();
+						t.start(); //Responsehandler starten
 						sendToOut(s,"updateme");
-
 						GI = new GameInterface(this);
-
-						break;
+						break; //Unendlichen Loop schließen, da ja jetzt der Client und Responsehandler gestartet wurde
 
 					}else if(received.equals("fullgame")) {
 						if(showMessage)JOptionPane.showMessageDialog(null, "Konnte dem Spiel nicht beitreten, da das Spiel voll ist.");
@@ -431,19 +437,9 @@ public class VerbindungsFenster extends JFrame {
 		connectPanel.add(btnVerbindungTrennen);
 	}
 
-	//static public void ResponseBearbeiten(String response) {
-	/*	https://jc-downloads.s3.amazonaws.com/git-team-cheatsheet.pdf
-	 * *ResponseIDs:
-		 *0: Kapital:
-		 *1: Zinssatz:
-		 *2: Kredit:
-		 *3: Marktpreis:
-		*/
+	//Spiel beenden
+	public void EndGame() {
 
-	public void EndGame() { //16 winner 17 loser
-
-		/*if(amWinner) es= new Endscreen(rundenDaten, true);
-		else es = new Endscreen(rundenDaten, false);*/
 		es.setWinner(amWinner);
 		es.setRundenDaten(rundenDaten);
 		es.getStats(ID);
@@ -452,6 +448,7 @@ public class VerbindungsFenster extends JFrame {
 	}
 
 
+	//Antworten vom Server ohne zweites Argument bearbeiten
 	public void ResponseBearbeiten(int responseID) {
 		System.out.println("Client[Ich]<-Server: ResponseID: "+responseID);
 		switch(responseID) {
@@ -480,6 +477,7 @@ public class VerbindungsFenster extends JFrame {
 		}
 	}
 
+	//Antworten vom Server mit zweitem Argument bearbeiten
 	public void ResponseBearbeiten(int responseID, String response) {
 		System.out.println("Client[Ich]<-Server: '"+response+"' - ResponseID: "+responseID);
 		switch(responseID) {
